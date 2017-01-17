@@ -20,4 +20,18 @@ public class CallJsTest {
         assertTrue(result instanceof java.lang.String);
         assertEquals("hello", (String)result);
     }
+
+    @Test
+    public void shouldReturnObject() {
+        Object result = subject.execute("JSON.parse('{\"key\": \"value\"}')");
+        assertTrue(result instanceof java.util.Map);
+        assertEquals("value", ((java.util.Map<String, String>)result).get("key"));
+    }
+
+    @Test
+    public void shouldCallFunction() {
+        subject.compile("function echo(val) {return val;}");
+        Object result = subject.call("echo", "echo");
+        assertEquals("echo", result);
+    }
 }
