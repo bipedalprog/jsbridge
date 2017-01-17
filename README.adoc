@@ -1,0 +1,7 @@
+jsbridge
+========
+Dennis Caldwell <dennis@bipedalprogrammer.com>
+Version 1.0, 2017-01-16
+
+jsbridge is an example showing the reuse of Java Script code in a Java application. This allows you to develop your
+validation logic in one place (client side) and reuse it in the backend service.
