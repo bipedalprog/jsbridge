@@ -1,5 +1,6 @@
 package com.bipedalprogrammer.jsbridge;
 
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,9 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CallJsTest {
     private CallJs subject;
@@ -60,6 +59,16 @@ public class CallJsTest {
         address.setStreet1("100 Harrison Avenue");
         Boolean valid = (Boolean) subject.call("isValidShippingAddress", address);
         assertTrue(valid);
+    }
+
+    @Test
+    public void shouldAllowMultipleArgs() {
+        subject.compile(read("address.js"));
+        Object obj = subject.call("makeAddress", "USA", "45030", "Ohio",
+                "100 Harrision Avenue", "");
+        assertNotNull(obj);
+        ScriptObjectMirror mirror = (ScriptObjectMirror) obj;
+        assertTrue(mirror.containsKey("country"));
     }
 
     private Reader read(String path) {

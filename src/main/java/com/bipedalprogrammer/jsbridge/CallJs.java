@@ -6,15 +6,11 @@ import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.Reader;
 
-/**
- * Created by bipedal on 1/13/17.
- */
 public class CallJs {
-    private ScriptEngineManager manager;
     private ScriptEngine engine;
 
     public CallJs() {
-        manager = new ScriptEngineManager();
+        ScriptEngineManager manager = new ScriptEngineManager();
         engine = manager.getEngineByName("nashorn");
 
     }
@@ -23,6 +19,11 @@ public class CallJs {
         return this.engine;
     }
 
+    /**
+     * Execute the javascript and return the result.
+     * @param js String containing script.
+     * @return Object representing the return value.
+     */
     public Object execute(String js) {
         Object result = null;
         try {
@@ -33,6 +34,10 @@ public class CallJs {
         return result;
     }
 
+    /**
+     * Update the state of javascript instance with the contents of the given script.
+     * @param js String containing the script.
+     */
     public void compile(String js) {
         try {
             engine.eval(js);
@@ -41,6 +46,10 @@ public class CallJs {
         }
     }
 
+    /**
+     * Update the statue of the javascript instance with contents of the given stream.
+     * @param reader Reader interface to javascript file.
+     */
     public void compile(Reader reader) {
         try {
             engine.eval(reader);
@@ -49,11 +58,34 @@ public class CallJs {
         }
     }
 
+    /**
+     * Invoke a javascript function by name with a single argument.
+     * @param methodName name of function to call.
+     * @param arg Argument.
+     * @return result.
+     */
     public Object call(String methodName, Object arg) {
         Object result = null;
         try {
             Invocable invoce = (Invocable) engine;
             result = invoce.invokeFunction(methodName, arg);
+        } catch (NoSuchMethodException | ScriptException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    /**
+     * Invoke a javascript function with more than one argument.
+     * @param methodName function to call.
+     * @param args arguments.
+     * @return result.
+     */
+    public Object call(String methodName, Object... args) {
+        Object result = null;
+        try {
+            Invocable invoce = (Invocable) engine;
+            result = invoce.invokeFunction(methodName, args);
         } catch (NoSuchMethodException | ScriptException e) {
             e.printStackTrace();
         }
